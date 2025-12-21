@@ -1,0 +1,46 @@
+---
+- name: Install Oh My Posh without Homebrew (curl installer)
+  ansible.builtin.shell: |
+    set -o errexit
+    export OMPINSTALL_DIR="$HOME/.local/share/oh-my-posh"
+    mkdir -p "$OMPINSTALL_DIR"
+    curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$OMPINSTALL_DIR"
+  args:
+    executable: /bin/bash
+  tags:
+    - oh-my-posh
+
+- name: Ensure oh-my-posh is on PATH in ~/.zshrc
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env','HOME') }}/.zshrc"
+    regexp: '^export PATH=.*\\.local/share/oh-my-posh'
+    line: 'export PATH="$HOME/.local/share/oh-my-posh:$PATH"'
+    create: yes
+  tags:
+    - oh-my-posh
+
+# - name: Download oh-my-prash.omp.json from GitHub
+#   ansible.builtin.get_url:
+#     url: "{{ oh_my_posh_config_url }}"
+#     dest: "{{ lookup('env','HOME') }}/oh-my-prash.omp.json"
+#     mode: '0644'
+#   tags:
+#     - oh-my-posh
+
+- name: Install Meslo font with oh-my-posh
+  ansible.builtin.shell: "{{ lookup('env','HOME') }}/.local/share/oh-my-posh/oh-my-posh font install meslo"
+  args:
+    executable: /bin/bash
+  changed_when: false
+  failed_when: false
+  tags:
+    - oh-my-posh
+
+- name: Initialize oh-my-posh with custom config in ~/.zshrc
+  ansible.builtin.lineinfile:
+    path: "{{ lookup('env','HOME') }}/.zshrc"
+    regexp: 'oh-my-posh init zsh.*oh-my-prash'
+    line: 'eval "$({{ lookup("env","HOME") }}/.local/share/oh-my-posh/oh-my-posh init zsh --config ~/oh-my-prash.omp.json)"'
+    create: yes
+  tags:
+    - oh-my-posh

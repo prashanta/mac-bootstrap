@@ -1,0 +1,16 @@
+---
+- name: Template aliases into ~/.aliases
+  ansible.builtin.template:
+    src: templates/aliases.j2
+    dest: "~/.aliases"
+    mode: '0644'
+  tags:
+    - aliases
+
+- name: Ensure ~/.zshrc sources ~/.aliases
+  ansible.builtin.lineinfile:
+    path: "~/.zshrc"
+    line: "if [ -f \"$HOME/.aliases\" ]; then . \"$HOME/.aliases\"; fi"
+    create: yes
+  tags:
+    - aliases

@@ -1,0 +1,35 @@
+---
+- name: Install Oh My Zsh (clone repository)
+  ansible.builtin.git:
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    dest: "{{ lookup('env','HOME') }}/.oh-my-zsh"
+    version: master
+    update: yes
+  tags:
+    - oh-my-zsh
+
+- name: Ensure ~/.zshrc exists for Oh My Zsh
+  ansible.builtin.file:
+    path: "~/.zshrc"
+    state: touch
+    mode: '0644'
+  tags:
+    - oh-my-zsh
+
+- name: Ensure ZSH environment variable is set in ~/.zshrc
+  ansible.builtin.lineinfile:
+    path: "~/.zshrc"
+    regexp: '^export ZSH='
+    line: 'export ZSH="$HOME/.oh-my-zsh"'
+    create: yes
+  tags:
+    - oh-my-zsh
+
+- name: Ensure ~/.zshrc sources Oh My Zsh
+  ansible.builtin.lineinfile:
+    path: "~/.zshrc"
+    regexp: 'source \$ZSH/oh-my-zsh.sh'
+    line: 'source $ZSH/oh-my-zsh.sh'
+    create: yes
+  tags:
+    - oh-my-zsh

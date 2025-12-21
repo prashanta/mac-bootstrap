@@ -1,0 +1,25 @@
+---
+- name: Ensure community.general collection is installed
+  ansible.builtin.command:
+    cmd: ansible-galaxy collection install community.general
+  changed_when: false
+
+- name: Ensure Homebrew is installed (if use_homebrew)
+  ansible.builtin.shell: |
+    test -x /opt/homebrew/bin/brew || test -x /usr/local/bin/brew || \
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  args:
+    executable: /bin/bash
+  when: use_homebrew
+
+- name: Install packages with Homebrew
+  community.general.homebrew:
+    name: "{{ brew_packages }}"
+    state: present
+  when: use_homebrew and brew_packages | length > 0
+
+- name: Install GUI apps with Homebrew Cask
+  community.general.homebrew_cask:
+    name: "{{ brew_casks }}"
+    state: present
+  when: use_homebrew and brew_casks | length > 0

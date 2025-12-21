@@ -1,0 +1,114 @@
+---
+- name: Configure Git user name
+  community.general.git_config:
+    name: user.name
+    value: "{{ git_user_name }}"
+    scope: global
+  tags:
+    - git-config
+
+- name: Configure Git user email
+  community.general.git_config:
+    name: user.email
+    value: "{{ git_user_email }}"
+    scope: global
+  tags:
+    - git-config
+
+- name: Configure Git core pager
+  community.general.git_config:
+    name: core.pager
+    value: "{{ git_core_pager }}"
+    scope: global
+  tags:
+    - git-config
+
+- name: Configure Git core filemode
+  community.general.git_config:
+    name: core.filemode
+    value: "{{ git_core_filemode }}"
+    scope: global
+  tags:
+    - git-config
+
+- name: Configure Git diff tool
+  community.general.git_config:
+    name: diff.tool
+    value: "{{ git_diff_tool }}"
+    scope: global
+  tags:
+    - git-config
+
+- name: Configure Git log1 alias
+  community.general.git_config:
+    name: alias.log1
+    value: "{{ git_alias_log1 }}"
+    scope: global
+  tags:
+    - git-config
+
+- name: Configure Git core excludesfile
+  community.general.git_config:
+    name: core.excludesfile
+    value: "{{ git_core_excludesfile }}"
+    scope: global
+  when: git_core_excludesfile is defined and git_core_excludesfile != ""
+  tags:
+    - git-config
+
+- name: Configure Git commit template
+  community.general.git_config:
+    name: commit.template
+    value: "{{ git_commit_template }}"
+    scope: global
+  when: git_commit_template is defined and git_commit_template != ""
+  tags:
+    - git-config
+
+- name: Configure Git difftool.sourcetree cmd
+  community.general.git_config:
+    name: difftool.sourcetree.cmd
+    value: "{{ git_difftool_sourcetree_cmd }}"
+    scope: global
+  when: git_difftool_sourcetree_cmd is defined and git_difftool_sourcetree_cmd != ""
+  tags:
+    - git-config
+
+- name: Configure Git mergetool.sourcetree cmd
+  community.general.git_config:
+    name: mergetool.sourcetree.cmd
+    value: "{{ git_mergetool_sourcetree_cmd }}"
+    scope: global
+  when: git_mergetool_sourcetree_cmd is defined and git_mergetool_sourcetree_cmd != ""
+  tags:
+    - git-config
+
+- name: Configure Git mergetool.sourcetree trustExitCode
+  community.general.git_config:
+    name: mergetool.sourcetree.trustExitCode
+    value: "{{ git_mergetool_sourcetree_trust_exit_code }}"
+    scope: global
+  when: git_mergetool_sourcetree_trust_exit_code is defined and git_mergetool_sourcetree_trust_exit_code != ""
+  tags:
+    - git-config
+
+- name: Configure Git includeIf for devx directory
+  ansible.builtin.lineinfile:
+    path: "~/.gitconfig"
+    regexp: '^\[includeIf "gitdir:~/devx/"\]'
+    line: '[includeIf "gitdir:~/devx/"]'
+    create: yes
+  when: git_include_if_devx
+  tags:
+    - git-config
+
+- name: Configure Git includeIf path for devx
+  ansible.builtin.lineinfile:
+    path: "~/.gitconfig"
+    regexp: '^\s+path = ~/.gitconfig-devx'
+    line: '  path = ~/.gitconfig-devx'
+    insertafter: '^\[includeIf "gitdir:~/devx/"\]'
+    create: yes
+  when: git_include_if_devx
+  tags:
+    - git-config

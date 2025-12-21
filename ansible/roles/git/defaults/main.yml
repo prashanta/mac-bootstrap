@@ -1,0 +1,13 @@
+---
+git_user_name: ""
+git_user_email: ""
+git_core_pager: "cat"
+git_core_filemode: "false"
+git_diff_tool: "vimdiff"
+git_alias_log1: "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)'"
+git_core_excludesfile: ""
+git_commit_template: ""
+git_difftool_sourcetree_cmd: ""
+git_mergetool_sourcetree_cmd: ""
+git_mergetool_sourcetree_trust_exit_code: ""
+git_include_if_devx: false

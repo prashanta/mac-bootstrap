@@ -1,0 +1,5 @@
+---
+use_homebrew: true
+brew_packages: []
+brew_casks:
+  - jumpcut
