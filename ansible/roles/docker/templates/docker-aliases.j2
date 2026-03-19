@@ -1,0 +1,15 @@
+# ~/.docker-aliases - managed by Ansible template
+
+# Docker
+alias dps='docker ps'
+alias dpsa='docker ps -a'
+alias dlog='docker logs -f'
+alias dex='docker exec -it'
+
+# PostgreSQL via Docker
+# Usage: sql "SELECT * FROM users;"
+alias sql='docker exec -it "$PG_CONTAINER" psql -U "$PG_USER" -d "$PG_DB" -c'
+alias pg-tables='sql "\dt"'
+
+pg-desc() { sql "\d+ $1"; }
+pg-all()  { sql "SELECT * FROM $1;"; }

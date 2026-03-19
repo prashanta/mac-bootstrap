@@ -10,4 +10,5 @@
     - oh-my-posh
     - oh-my-zsh
     - aliases
+    - docker
     - nodejs

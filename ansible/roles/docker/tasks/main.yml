@@ -1,0 +1,34 @@
+---
+- name: Template Docker aliases into ~/.docker-aliases
+  ansible.builtin.template:
+    src: docker-aliases.j2
+    dest: "~/.docker-aliases"
+    mode: '0644'
+  tags:
+    - docker
+
+- name: Ensure ~/.zshrc sources ~/.docker-aliases
+  ansible.builtin.lineinfile:
+    path: "~/.zshrc"
+    line: "if [ -f \"$HOME/.docker-aliases\" ]; then . \"$HOME/.docker-aliases\"; fi"
+    create: yes
+  tags:
+    - docker
+
+- name: Template PostgreSQL profile into ~/.pgprofile
+  ansible.builtin.template:
+    src: pgprofile.j2
+    dest: "~/.pgprofile"
+    mode: '0600'
+  tags:
+    - docker
+    - pgprofile
+
+- name: Ensure ~/.zshrc sources ~/.pgprofile
+  ansible.builtin.lineinfile:
+    path: "~/.zshrc"
+    line: "if [ -f \"$HOME/.pgprofile\" ]; then . \"$HOME/.pgprofile\"; fi"
+    create: yes
+  tags:
+    - docker
+    - pgprofile

@@ -1,0 +1,48 @@
+# ~/.bashrc or ~/.zshrc
+
+# ── Profile Store ──────────────────────────────────────────
+# Format: "container:user:dbname"
+unset PG_PROFILES
+typeset -A PG_PROFILES
+PG_PROFILES[inventory]="inventory_db:postgres:inventory_db"
+
+# ── Profile Switcher ───────────────────────────────────────
+# Usage: pguse <profile>
+#        pguse          (lists available profiles)
+pguse() {
+  if [[ -z "$1" ]]; then
+    echo "Available profiles:"
+    for key in "${(k)PG_PROFILES[@]}"; do
+      marker=" "
+      [[ "$key" == "$PG_CURRENT_PROFILE" ]] && marker="*"
+      echo "  $marker $key  →  ${PG_PROFILES[$key]}"
+    done
+    return
+  fi
+
+  local profile="${PG_PROFILES[$1]}"
+  if [[ -z "$profile" ]]; then
+    echo "Profile '$1' not found. Run 'pguse' to list profiles."
+    return 1
+  fi
+
+  export PG_CONTAINER=$(echo "$profile" | cut -d: -f1)
+  export PG_USER=$(echo "$profile"      | cut -d: -f2)
+  export PG_DB=$(echo "$profile"        | cut -d: -f3)
+  export PG_CURRENT_PROFILE="$1"
+
+  echo "Switched to '$1'  →  container=$PG_CONTAINER  user=$PG_USER  db=$PG_DB"
+}
+
+# ── Core Alias ─────────────────────────────────────────────
+# Usage: sql "SELECT * FROM users;"
+alias sql='docker exec -it "$PG_CONTAINER" psql -U "$PG_USER" -d "$PG_DB" -c'
+
+# ── Convenience Aliases ────────────────────────────────────
+# Usage: pg-tables
+#        pg-desc <table>
+#        pg-all  <table>
+alias pg-tables='sql "\dt"'
+
+pg-desc() { sql "\d+ $1"; }
+pg-all()  { sql "SELECT * FROM $1;"; }
