@@ -7,9 +7,9 @@ alias dlog='docker logs -f'
 alias dex='docker exec -it'
 
 # PostgreSQL via Docker
-# Usage: sql "SELECT * FROM users;"
-alias sql='docker exec -it "$PG_CONTAINER" psql -U "$PG_USER" -d "$PG_DB" -c'
-alias pg-tables='sql "\dt"'
+# Usage: dsql "SELECT * FROM users;"
+alias dsql='docker exec -it "$DSQL_CONTAINER" psql -U "$DSQL_USER" -d "$DSQL_DB" -c'
+alias pg-tables='dsql "\dt"'
 
-pg-desc() { sql "\d+ $1"; }
-pg-all()  { sql "SELECT * FROM $1;"; }
+pg-desc() { dsql "\d+ $1"; }
+pg-all()  { dsql "SELECT * FROM $1;"; }
